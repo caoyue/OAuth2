@@ -5,34 +5,34 @@ using OAuth2.Models;
 
 namespace OAuth2.Client.Impl
 {
-    public class WeiboClient : OAuth2Client
+    public class QqClient : OAuth2Client
     {
         private readonly IRequestFactory _factory;
 
-        public WeiboClient(IRequestFactory factory, IClientConfiguration configuration)
+        public QqClient(IRequestFactory factory, IClientConfiguration configuration)
             : base(factory, configuration)
         {
             _factory = factory;
         }
 
-        public override string Name => "Weibo";
+        public override string Name => "QQ";
 
         protected override Endpoint AccessCodeServiceEndpoint => new Endpoint
         {
-            BaseUri = "https://api.weibo.com",
-            Resource = "/oauth2/authorize"
+            BaseUri = "https://graph.qq.com",
+            Resource = "/oauth2.0/authorize"
         };
 
         protected override Endpoint AccessTokenServiceEndpoint => new Endpoint
         {
-            BaseUri = "https://api.weibo.com",
-            Resource = "/oauth2/access_token"
+            BaseUri = "https://graph.qq.com",
+            Resource = "/oauth2.0/token"
         };
 
         protected override Endpoint UserInfoServiceEndpoint => new Endpoint
         {
-            BaseUri = "https://api.weibo.com",
-            Resource = "/2/account/get_uid.json"
+            BaseUri = "https://graph.qq.com",
+            Resource = "/oauth2.0/me"
         };
 
         protected override UserInfo ParseUserInfo(string content)
@@ -40,7 +40,7 @@ namespace OAuth2.Client.Impl
             var response = JObject.Parse(content);
             return new UserInfo
             {
-                Id = response["uid"].Value<string>()
+                Id = response["openid"].Value<string>()
             };
         }
 
