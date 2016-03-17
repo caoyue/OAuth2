@@ -35,6 +35,12 @@ namespace OAuth2.Client.Impl
             Resource = "/2/account/get_uid.json"
         };
 
+        private Endpoint UserDetailServiceEndPoint => new Endpoint
+        {
+            BaseUri = "https://api.weibo.com",
+            Resource = "/2/users/show.json"
+        };
+
         protected override UserInfo ParseUserInfo(string content)
         {
             var response = JObject.Parse(content);
@@ -44,6 +50,33 @@ namespace OAuth2.Client.Impl
             };
         }
 
+        private UserInfo ParseUserDetail(string content)
+        {
+            var response = JObject.Parse(content);
+            return new UserInfo
+            {
+                Id = response["id"].Value<string>(),
+                FirstName = response["screen_name"].Value<string>(),
+                LastName = response["name"].Value<string>(),
+                AvatarUri =
+                {
+                    Large = response["avatar_large"].Value<string>(),
+                    Normal = response["avatar_large"].Value<string>(),
+                    Small = response["profile_image_url"].Value<string>()
+                }
+            };
+        }
+
+        private UserInfo GetUserDetail(string id)
+        {
+            var detailClient = _factory.CreateClient(UserDetailServiceEndPoint);
+            var detailRequest = _factory.CreateRequest(UserDetailServiceEndPoint)
+                .AddParameter("access_token", AccessToken)
+                .AddParameter("uid", id);
+            var detail = detailClient.ExecuteAndVerify(detailRequest);
+            return ParseUserDetail(detail.Content);
+        }
+
         protected override UserInfo GetUserInfo()
         {
             var client = _factory.CreateClient(UserInfoServiceEndpoint);
@@ -51,11 +84,12 @@ namespace OAuth2.Client.Impl
                 .AddParameter("access_token", AccessToken);
 
             var response = client.ExecuteAndVerify(request);
-
             var result = ParseUserInfo(response.Content);
-            result.ProviderName = Name;
 
-            return result;
+            var userInfo = GetUserDetail(result.Id);
+            userInfo.ProviderName = Name;
+
+            return userInfo;
         }
     }
 }
