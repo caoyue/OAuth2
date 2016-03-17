@@ -15,31 +15,58 @@ namespace OAuth2.Client.Impl
             _factory = factory;
         }
 
-        public override string Name => "Weibo";
-
-        protected override Endpoint AccessCodeServiceEndpoint => new Endpoint
+        public override string Name
         {
-            BaseUri = "https://api.weibo.com",
-            Resource = "/oauth2/authorize"
-        };
+            get { return "Weibo"; }
+        }
 
-        protected override Endpoint AccessTokenServiceEndpoint => new Endpoint
+        protected override Endpoint AccessCodeServiceEndpoint
         {
-            BaseUri = "https://api.weibo.com",
-            Resource = "/oauth2/access_token"
-        };
+            get
+            {
+                return new Endpoint
+                {
+                    BaseUri = "https://api.weibo.com",
+                    Resource = "/oauth2/authorize"
+                };
+            }
+        }
 
-        protected override Endpoint UserInfoServiceEndpoint => new Endpoint
+        protected override Endpoint AccessTokenServiceEndpoint
         {
-            BaseUri = "https://api.weibo.com",
-            Resource = "/2/account/get_uid.json"
-        };
+            get
+            {
+                return new Endpoint
+                {
+                    BaseUri = "https://api.weibo.com",
+                    Resource = "/oauth2/access_token"
+                };
+            }
+        }
 
-        private Endpoint UserDetailServiceEndPoint => new Endpoint
+        protected override Endpoint UserInfoServiceEndpoint
         {
-            BaseUri = "https://api.weibo.com",
-            Resource = "/2/users/show.json"
-        };
+            get
+            {
+                return new Endpoint
+                {
+                    BaseUri = "https://api.weibo.com",
+                    Resource = "/2/account/get_uid.json"
+                };
+            }
+        }
+
+        private Endpoint UserDetailServiceEndPoint
+        {
+            get
+            {
+                return new Endpoint
+                {
+                    BaseUri = "https://api.weibo.com",
+                    Resource = "/2/users/show.json"
+                };
+            }
+        }
 
         protected override UserInfo ParseUserInfo(string content)
         {

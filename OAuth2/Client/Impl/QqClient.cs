@@ -15,31 +15,58 @@ namespace OAuth2.Client.Impl
             _factory = factory;
         }
 
-        public override string Name => "QQ";
-
-        protected override Endpoint AccessCodeServiceEndpoint => new Endpoint
+        public override string Name
         {
-            BaseUri = "https://graph.qq.com",
-            Resource = "/oauth2.0/authorize"
-        };
+            get { return "QQ"; }
+        }
 
-        protected override Endpoint AccessTokenServiceEndpoint => new Endpoint
+        protected override Endpoint AccessCodeServiceEndpoint
         {
-            BaseUri = "https://graph.qq.com",
-            Resource = "/oauth2.0/token"
-        };
+            get
+            {
+                return new Endpoint
+                {
+                    BaseUri = "https://graph.qq.com",
+                    Resource = "/oauth2.0/authorize"
+                };
+            }
+        }
 
-        protected override Endpoint UserInfoServiceEndpoint => new Endpoint
+        protected override Endpoint AccessTokenServiceEndpoint
         {
-            BaseUri = "https://graph.qq.com",
-            Resource = "/oauth2.0/me"
-        };
+            get
+            {
+                return new Endpoint
+                {
+                    BaseUri = "https://graph.qq.com",
+                    Resource = "/oauth2.0/token"
+                };
+            }
+        }
 
-        private Endpoint UserDetailServiceEndPoint => new Endpoint
+        protected override Endpoint UserInfoServiceEndpoint
         {
-            BaseUri = "https://graph.qq.com",
-            Resource = "/user/get_user_info"
-        };
+            get
+            {
+                return new Endpoint
+                {
+                    BaseUri = "https://graph.qq.com",
+                    Resource = "/oauth2.0/me"
+                };
+            }
+        }
+
+        private Endpoint UserDetailServiceEndPoint
+        {
+            get
+            {
+                return new Endpoint
+                {
+                    BaseUri = "https://graph.qq.com",
+                    Resource = "/user/get_user_info"
+                };
+            }
+        }
 
         protected override UserInfo ParseUserInfo(string content)
         {
