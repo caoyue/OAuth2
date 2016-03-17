@@ -122,6 +122,8 @@ Use user info as you wish, for example, display user details:
 - VK (Vkontakte)
 - Windows Live
 - Yandex
+- Weibo
+- QQ
 
 ## Goals ##
 
